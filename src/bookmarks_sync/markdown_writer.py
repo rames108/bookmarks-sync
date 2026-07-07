@@ -18,11 +18,18 @@ def write_markdown_notes(
 
     created_paths: list[Path] = []
     for bookmark in bookmarks:
-        note_path = _available_note_path(obsidian_import_folder, bookmark.title)
-        note_path.write_text(_render_markdown(bookmark), encoding="utf-8")
-        created_paths.append(note_path)
+        created_paths.append(write_markdown_note(bookmark, obsidian_import_folder))
 
     return created_paths
+
+
+def write_markdown_note(bookmark: Bookmark, obsidian_import_folder: Path) -> Path:
+    """Write one bookmark to a Markdown file and return the created path."""
+    obsidian_import_folder.mkdir(parents=True, exist_ok=True)
+    note_path = _available_note_path(obsidian_import_folder, bookmark.title)
+    note_path.write_text(_render_markdown(bookmark), encoding="utf-8")
+
+    return note_path
 
 
 def _render_markdown(bookmark: Bookmark) -> str:
