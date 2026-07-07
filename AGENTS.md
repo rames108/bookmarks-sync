@@ -201,7 +201,7 @@ Example:
 ```json
 {
   "vault_path": "C:/Users/Administrator/OneDrive/Documents/Obsidian Vault",
-  "inbox_folder": "00 Inbox",
+  "obsidian_import_folder": "00 Inbox",
   "bookmark_folder": "📥 Obsidian Inbox",
   "poll_interval_minutes": 60
 }
