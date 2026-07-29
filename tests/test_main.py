@@ -20,14 +20,15 @@ def test_import_new_bookmarks_skips_duplicate_urls(tmp_path: Path) -> None:
     created_count, skipped_count = import_new_bookmarks(
         bookmarks,
         notes_path,
+        tmp_path,  # vault_path
         state_path,
     )
 
     assert created_count == 2
     assert skipped_count == 1
-    assert (notes_path / "First.md").exists()
-    assert not (notes_path / "Duplicate.md").exists()
-    assert (notes_path / "Second.md").exists()
+    assert (notes_path / "Bookmarks" / "First.md").exists()
+    assert not (notes_path / "Bookmarks" / "Duplicate.md").exists()
+    assert (notes_path / "Bookmarks" / "Second.md").exists()
     assert [record.url for record in load_imported_bookmarks(state_path)] == [
         "https://example.com",
         "https://example.com/second",

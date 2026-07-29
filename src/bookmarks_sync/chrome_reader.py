@@ -13,6 +13,7 @@ class Bookmark:
 
     title: str
     url: str
+    relative_folder: Path = Path()
 
 
 def read_bookmarks(
@@ -80,7 +81,10 @@ def _find_folder(node: Any, folder_name: str) -> dict[str, Any] | None:
     return None
 
 
-def _collect_bookmarks(folder: dict[str, Any]) -> list[Bookmark]:
+def _collect_bookmarks(
+    folder: dict[str, Any],
+    relative_folder: Path = Path(),
+) -> list[Bookmark]:
     """Collect bookmarks from a matched folder and its child folders only."""
     bookmarks: list[Bookmark] = []
 
@@ -92,9 +96,19 @@ def _collect_bookmarks(folder: dict[str, Any]) -> list[Bookmark]:
             title = child.get("name")
             url = child.get("url")
             if isinstance(title, str) and isinstance(url, str):
-                bookmarks.append(Bookmark(title=title, url=url))
+                bookmarks.append(
+                    Bookmark(
+                        title=title,
+                        url=url,
+                        relative_folder=relative_folder,
+                    )
+                )
 
         if child.get("type") == "folder":
-            bookmarks.extend(_collect_bookmarks(child))
+            folder_name = child.get("name")
+            if isinstance(folder_name, str):
+                bookmarks.extend(
+                    _collect_bookmarks(child, relative_folder / folder_name)
+                )
 
     return bookmarks
